@@ -10,9 +10,20 @@ import Button from '../Button';
 
 export default function ContactForm({ buttonLabel }) {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [category, setCategory] = useState('');
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    console.log({
+      name, email, phone, category,
+    });
+  };
 
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
       <FormGroup>
         <Input
           value={name} // Passar value para algum campo do form, passa a ser um controlledComponen
@@ -21,21 +32,30 @@ export default function ContactForm({ buttonLabel }) {
         />
       </FormGroup>
 
-      <FormGroup
-        error="O formato do e-mail é inválido"
-      >
-        <Input placeholder="E-mail" error />
+      <FormGroup>
+        <Input
+          value={email}
+          placeholder="E-mail"
+          onChange={(event) => setEmail(event.target.value)}
+        />
       </FormGroup>
 
       <FormGroup>
-        <Input placeholder="Telefone" />
+        <Input
+          value={phone}
+          placeholder="Telefone"
+          onChange={(event) => setPhone(event.target.value)}
+        />
       </FormGroup>
 
       <FormGroup>
-        <Select>
-          <option value="Instagram">Instagram</option>
-          <option value="Instagram">Facebook</option>
-          <option value="Instagram">LinkedIn</option>
+        <Select
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+        >
+          <option value="">Categoria</option>
+          <option value="instagram">Instagram</option>
+          <option value="linkedin">LinkedIn</option>
         </Select>
       </FormGroup>
 
