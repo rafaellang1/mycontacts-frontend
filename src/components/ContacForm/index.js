@@ -14,6 +14,14 @@ export default function ContactForm({ buttonLabel }) {
   const [phone, setPhone] = useState('');
   const [category, setCategory] = useState('');
 
+  function handleNameChange(event) {
+    setName(event.target.value);
+
+    if (!event.target.value) {
+      console.log('Nome é obrigatório');
+    }
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -26,9 +34,9 @@ export default function ContactForm({ buttonLabel }) {
     <Form onSubmit={handleSubmit}>
       <FormGroup>
         <Input
-          value={name} // Passar value para algum campo do form, passa a ser um controlledComponen
           placeholder="Nome"
-          onChange={(event) => setName(event.target.value)}
+          value={name} // Passar value para algum campo do form, passa a ser um controlledComponen
+          onChange={handleNameChange}
         />
       </FormGroup>
 
