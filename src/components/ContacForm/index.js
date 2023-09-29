@@ -17,6 +17,8 @@ export default function ContactForm({ buttonLabel }) {
   const [category, setCategory] = useState('');
   const [errors, setErrors] = useState([]);
 
+  console.log(errors);
+
   function handleNameChange(event) {
     setName(event.target.value);
 
@@ -35,10 +37,18 @@ export default function ContactForm({ buttonLabel }) {
   function handleEmailChange(event) {
     setEmail(event.target.value);
 
+    // user digitou algum valor? && e esse é um email é valido?
     if (event.target.value && !isEmailValid(event.target.value)) {
+      // ja existe algum objeto de error field igual a email?
+      const errorAlreadyExists = errors.find((error) => error.field === 'email');
+
+      if (errorAlreadyExists) {
+        return;
+      }
+
       setErrors((prevState) => [
         ...prevState,
-        { field: 'emai', message: 'Email está com incorreto. Verifique!' },
+        { field: 'emai', message: 'Email está incorreto. Verifique!' },
       ]);
     } else {
       setErrors((prevState) => prevState.filter(
@@ -47,7 +57,7 @@ export default function ContactForm({ buttonLabel }) {
     }
   }
 
-  console.log(errors);
+  // console.log(errors);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -69,8 +79,8 @@ export default function ContactForm({ buttonLabel }) {
 
       <FormGroup>
         <Input
-          value={email}
           placeholder="E-mail"
+          value={email}
           onChange={handleEmailChange}
         />
       </FormGroup>
