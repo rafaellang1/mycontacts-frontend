@@ -17,8 +17,6 @@ export default function ContactForm({ buttonLabel }) {
   const [category, setCategory] = useState('');
   const [errors, setErrors] = useState([]);
 
-  console.log(errors);
-
   function handleNameChange(event) {
     setName(event.target.value);
 
@@ -40,6 +38,7 @@ export default function ContactForm({ buttonLabel }) {
     // user digitou algum valor? && e esse é um email é valido?
     if (event.target.value && !isEmailValid(event.target.value)) {
       // ja existe algum objeto de error field igual a email?
+
       const errorAlreadyExists = errors.find((error) => error.field === 'email');
 
       if (errorAlreadyExists) {
@@ -48,7 +47,7 @@ export default function ContactForm({ buttonLabel }) {
 
       setErrors((prevState) => [
         ...prevState,
-        { field: 'emai', message: 'Email está incorreto. Verifique!' },
+        { field: 'email', message: 'Digite um endereço de email válido' },
       ]);
     } else {
       setErrors((prevState) => prevState.filter(
@@ -57,7 +56,10 @@ export default function ContactForm({ buttonLabel }) {
     }
   }
 
-  // console.log(errors);
+  function getErrorMessageByFieldName(fieldName) {
+    // utilizando optional chaining ? para validar o find e não retornar undefined
+    return errors.find((error) => error.field === fieldName)?.message;
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -69,16 +71,18 @@ export default function ContactForm({ buttonLabel }) {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <FormGroup>
+      <FormGroup error={getErrorMessageByFieldName('name')}>
         <Input
+          error={getErrorMessageByFieldName('name')}
           placeholder="Nome"
           value={name} // Passar value para algum campo do form, passa a ser um controlledComponen
           onChange={handleNameChange}
         />
       </FormGroup>
 
-      <FormGroup>
+      <FormGroup error={getErrorMessageByFieldName('email')}>
         <Input
+          error={getErrorMessageByFieldName('email')}
           placeholder="E-mail"
           value={email}
           onChange={handleEmailChange}
