@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import isEmailValid from '../../utils/isEmailValid';
+import formatPhone from '../../utils/formatPhone';
 import useErrors from '../../hooks/useErrors';
 
 import { Form, ButtonContainer } from './styles';
@@ -18,7 +19,14 @@ export default function ContactForm({ buttonLabel }) {
   const [category, setCategory] = useState('');
 
   // import de useErros (custom hooks);
-  const { setError, removeError, getErrorMessageByFieldName } = useErrors();
+  const {
+    errors,
+    setError,
+    removeError,
+    getErrorMessageByFieldName,
+  } = useErrors();
+
+  const isFormValid = (name && errors.length === 0);
 
   function handleNameChange(event) {
     setName(event.target.value);
@@ -42,7 +50,7 @@ export default function ContactForm({ buttonLabel }) {
   }
 
   function handlePhoneChange(event) {
-    setPhone(event.target.value);
+    setPhone(formatPhone(event.target.value));
   }
 
   const handleSubmit = (event) => {
@@ -58,7 +66,7 @@ export default function ContactForm({ buttonLabel }) {
       <FormGroup error={getErrorMessageByFieldName('name')}>
         <Input
           error={getErrorMessageByFieldName('name')}
-          placeholder="Nome"
+          placeholder="Nome *"
           value={name} // Passar value para algum campo do form, passa a ser um controlledComponen
           onChange={handleNameChange}
         />
@@ -80,6 +88,7 @@ export default function ContactForm({ buttonLabel }) {
           value={phone}
           placeholder="Telefone"
           onChange={handlePhoneChange}
+          maxLength="15"
         />
       </FormGroup>
 
@@ -93,9 +102,10 @@ export default function ContactForm({ buttonLabel }) {
           <option value="linkedin">LinkedIn</option>
         </Select>
       </FormGroup>
+      <small>* campos obrigatórios</small>
 
       <ButtonContainer>
-        <Button type="submit">
+        <Button type="submit" disabled={!isFormValid}>
           {buttonLabel}
         </Button>
       </ButtonContainer>
