@@ -53,10 +53,25 @@ export default function Home() {
   );
 }
 
-fetch('http://localhost:3000')
+fetch('http://localhost:3001/contacts', {
+  method: 'DELETE',
+  headers: new Headers({
+    'X-App-ID': '123',
+  }),
+})
   .then((response) => {
     console.log('response', response);
   })
   .catch((error) => {
     console.log('erro', error);
   });
+
+// SOP -> same Origin Policy -> Política de mesma origem
+// CORS -> Cross-Origin Resource Sharing -> Compartilhamento de recursos entre origens cruzadas
+// Origem: protocolo://dominio:porta
+
+// Saída: http://localhost:3000
+// Destino: http://localhost:3001
+
+// Preflight -> Pré-voô
+// Ao ferir a politica de mesma origem: saida === origem, ela passa a ser uma CORS
