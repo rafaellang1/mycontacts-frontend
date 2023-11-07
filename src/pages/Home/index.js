@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import { useEffect, useState } from 'react';
 import {
   Container, InputSearchContainer, Header, ListContainer, Card,
 } from './styles';
@@ -9,6 +10,21 @@ import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
 
 export default function Home() {
+  const [contacts, setContacts] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/contacts')
+      .then(async (response) => {
+        const json = await response.json(); // fazendo o parse do body
+        setContacts(json);
+      })
+      .catch((error) => {
+        console.log('erro', error);
+      });
+  }, []);
+
+  console.log(contacts);
+
   return (
     <Container>
 
@@ -52,19 +68,6 @@ export default function Home() {
     </Container>
   );
 }
-
-fetch('http://localhost:3001/contacts', {
-  method: 'DELETE',
-  headers: new Headers({
-    'X-App-ID': '123',
-  }),
-})
-  .then((response) => {
-    console.log('response', response);
-  })
-  .catch((error) => {
-    console.log('erro', error);
-  });
 
 // SOP -> same Origin Policy -> Política de mesma origem
 // CORS -> Cross-Origin Resource Sharing -> Compartilhamento de recursos entre origens cruzadas
