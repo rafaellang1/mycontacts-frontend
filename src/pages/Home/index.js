@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { useEffect, useState } from 'react';
 import {
-  Container, InputSearchContainer, Header, ListContainer, Card,
+  Container, InputSearchContainer, Header, ListHeader, Card,
 } from './styles';
 
 import arrow from '../../assets/images/icons/arrow.svg';
@@ -10,10 +10,12 @@ import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
 
 export default function Home() {
+  // Hooks
   const [contacts, setContacts] = useState([]);
+  const [orderBy, setOrderBy] = useState('asc');
 
   useEffect(() => {
-    fetch('http://localhost:3001/contacts')
+    fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
       .then(async (response) => {
         const json = await response.json(); // fazendo o parse do body
         setContacts(json);
@@ -21,9 +23,21 @@ export default function Home() {
       .catch((error) => {
         console.log('erro', error);
       });
-  }, []);
+  }, [orderBy]);
 
-  console.log(contacts);
+  // Functions
+
+  function handleToggleOrderBy() {
+    setOrderBy(
+      // para alterar valor de um state que depende do valor anterior
+      // não acessar o valor diretamente, acessar por meio do prevState
+      (prevState) => (prevState === 'asc' ? 'desc' : 'asc'),
+
+      // passar o queryParam para o backend com o valor armazenado no estado orderBy
+    );
+  }
+
+  console.log(orderBy);
 
   return (
     <Container>
@@ -39,14 +53,12 @@ export default function Home() {
         <Link to="/new">Novo contatos</Link>
       </Header>
 
-      <ListContainer>
-        <header>
-          <button type="button">
-            <span>Nome</span>
-            <img src={arrow} alt="Arrow" />
-          </button>
-        </header>
-      </ListContainer>
+      <ListHeader orderBy={orderBy}>
+        <button type="button" onClick={handleToggleOrderBy}>
+          <span>Nome</span>
+          <img src={arrow} alt="Arrow" />
+        </button>
+      </ListHeader>
 
       {contacts.map((contact) => (
         <Card key={contact.id}>
@@ -57,7 +69,7 @@ export default function Home() {
               {contact.category_name && (<small>{contact.category_name}</small>)}
             </div>
             <span>{contact.email}</span>
-            <span>contact.phone</span>
+            <span>{contact.phone}</span>
           </div>
 
           <div className="actions">
