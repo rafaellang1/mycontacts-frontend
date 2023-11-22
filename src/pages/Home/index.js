@@ -13,6 +13,7 @@ export default function Home() {
   // Hooks
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState('asc');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
@@ -37,13 +38,22 @@ export default function Home() {
     );
   }
 
+  function handleChangeSearchTerm(event) {
+    setSearchTerm(event.target.value);
+  }
+
   console.log(orderBy);
 
   return (
     <Container>
 
       <InputSearchContainer>
-        <input type="text" placeholder="Pesquise pelo nome..." />
+        <input
+          value={searchTerm}
+          type="text"
+          placeholder="Pesquise pelo nome..."
+          onChange={handleChangeSearchTerm}
+        />
       </InputSearchContainer>
       <Header>
         <strong>
@@ -53,7 +63,7 @@ export default function Home() {
         <Link to="/new">Novo contatos</Link>
       </Header>
 
-      <ListHeader orderBy={orderBy}>
+      <ListHeader $orderBy={orderBy}>
         <button type="button" onClick={handleToggleOrderBy}>
           <span>Nome</span>
           <img src={arrow} alt="Arrow" />
