@@ -13,7 +13,14 @@ export default function Home() {
   // Hooks
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState('asc');
+  // comeca retornando string vazia para o includes retornar true.
   const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredContacts = contacts.filter((contact) => (
+    // nome do contato, contenha o que o usuario digitou no campo de pesquisa = includes
+    // se uma string existe dentro de outra string = includes
+    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+  ));
 
   useEffect(() => {
     fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
@@ -38,11 +45,10 @@ export default function Home() {
     );
   }
 
+  // Se dentro do contact.name houver o item pesquisado, o includes retorna true
   function handleChangeSearchTerm(event) {
     setSearchTerm(event.target.value);
   }
-
-  console.log(orderBy);
 
   return (
     <Container>
@@ -55,22 +61,25 @@ export default function Home() {
           onChange={handleChangeSearchTerm}
         />
       </InputSearchContainer>
+
       <Header>
         <strong>
-          {contacts.length}
-          {contacts.length === 1 ? ' contato' : ' contatos'}
+          {filteredContacts.length}
+          {filteredContacts.length === 1 ? ' contato' : ' contatos'}
         </strong>
         <Link to="/new">Novo contatos</Link>
       </Header>
 
-      <ListHeader $orderBy={orderBy}>
-        <button type="button" onClick={handleToggleOrderBy}>
-          <span>Nome</span>
-          <img src={arrow} alt="Arrow" />
-        </button>
-      </ListHeader>
+      {filteredContacts.length > 0 && (
+        <ListHeader $orderBy={orderBy}>
+          <button type="button" onClick={handleToggleOrderBy}>
+            <span>Nome</span>
+            <img src={arrow} alt="Arrow" />
+          </button>
+        </ListHeader>
+      )}
 
-      {contacts.map((contact) => (
+      {filteredContacts.map((contact) => (
         <Card key={contact.id}>
           <div className="info">
             <div className="contact-name">
