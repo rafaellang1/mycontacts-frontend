@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   Container, InputSearchContainer, Header, ListHeader, Card,
 } from './styles';
@@ -16,11 +16,13 @@ export default function Home() {
   // comeca retornando string vazia para o includes retornar true.
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredContacts = contacts.filter((contact) => (
+  const filteredContacts = useMemo(() => contacts.filter((contact) => (
     // nome do contato, contenha o que o usuario digitou no campo de pesquisa = includes
     // se uma string existe dentro de outra string = includes
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
-  ));
+    // o valor retornado aqui dentro é o valor que queremos memorizar
+
+  )), [contacts, searchTerm]);
 
   useEffect(() => {
     fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
