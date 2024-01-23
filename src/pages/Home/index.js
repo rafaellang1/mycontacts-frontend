@@ -30,21 +30,30 @@ export default function Home() {
   )), [contacts, searchTerm]);
 
   useEffect(() => {
-    setIsloading(true);
+    async function loadContacts() {
+      try {
+        setIsloading(true);
 
-    fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
-      .then(async (response) => {
+        const response = await fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`);
+
         await delay(500);
 
         const json = await response.json(); // fazendo o parse do body
         setContacts(json);
-      })
-      .catch((error) => {
-        console.log('erro', error);
-      })
-      .finally(() => {
         setIsloading(false);
-      });
+      } catch (error) {
+        console.log('error', error);
+      } finally {
+        setIsloading(false);
+      }
+    }
+
+    loadContacts();
+
+    // P/ usar uma funcao async await dentro de um useEffect, nao use async direto no hook
+    // criar o hook e transfere o await para nova funcao dentro do hook useEffect
+
+    return () => console.log('cleanup');
   }, [orderBy]);
 
   // Functions
