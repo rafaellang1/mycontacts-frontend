@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-
 import { useEffect, useState, useMemo } from 'react';
+
 import {
   Container, InputSearchContainer, Header, ListHeader, Card,
 } from './styles';
@@ -9,12 +9,17 @@ import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
 
+import Loader from '../../components/Loader';
+
+import delay from '../../utils/delay';
+
 export default function Home() {
   // Hooks
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState('asc');
   // comeca retornando string vazia para o includes retornar true.
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsloading] = useState(true);
 
   const filteredContacts = useMemo(() => contacts.filter((contact) => (
     // nome do contato, contenha o que o usuario digitou no campo de pesquisa = includes
@@ -25,13 +30,20 @@ export default function Home() {
   )), [contacts, searchTerm]);
 
   useEffect(() => {
+    setIsloading(true);
+
     fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
       .then(async (response) => {
+        await delay(500);
+
         const json = await response.json(); // fazendo o parse do body
         setContacts(json);
       })
       .catch((error) => {
         console.log('erro', error);
+      })
+      .finally(() => {
+        setIsloading(false);
       });
   }, [orderBy]);
 
@@ -54,6 +66,7 @@ export default function Home() {
 
   return (
     <Container>
+      <Loader isLoading={isLoading} />
 
       <InputSearchContainer>
         <input
@@ -73,7 +86,7 @@ export default function Home() {
       </Header>
 
       {filteredContacts.length > 0 && (
-        <ListHeader $orderBy={orderBy}>
+        <ListHeader order={orderBy}>
           <button type="button" onClick={handleToggleOrderBy}>
             <span>Nome</span>
             <img src={arrow} alt="Arrow" />
