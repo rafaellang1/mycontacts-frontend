@@ -11,7 +11,7 @@ import trash from '../../assets/images/icons/trash.svg';
 
 import Loader from '../../components/Loader';
 
-import delay from '../../utils/delay';
+import ContactsService from '../../services/ContactsService';
 
 export default function Home() {
   // Hooks
@@ -34,13 +34,9 @@ export default function Home() {
       try {
         setIsloading(true);
 
-        const response = await fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`);
+        const contactsList = await ContactsService.listContacts(orderBy);
 
-        await delay(500);
-
-        const json = await response.json(); // fazendo o parse do body
-        setContacts(json);
-        setIsloading(false);
+        setContacts(contactsList);
       } catch (error) {
         console.log('error', error);
       } finally {
@@ -52,8 +48,6 @@ export default function Home() {
 
     // P/ usar uma funcao async await dentro de um useEffect, nao use async direto no hook
     // criar o hook e transfere o await para nova funcao dentro do hook useEffect
-
-    return () => console.log('cleanup');
   }, [orderBy]);
 
   // Functions
