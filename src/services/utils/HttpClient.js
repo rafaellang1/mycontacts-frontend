@@ -6,11 +6,15 @@ class HttpClient {
   }
 
   async get(path) {
-    const response = await fetch(`${this.baseURL}${path}`);
-
     await delay(500);
 
-    return response.json(); // fazendo o parse do body
+    const response = await fetch(`${this.baseURL}${path}`);
+
+    if (response.ok) {
+      return response.json(); // fazendo o parse do body
+    }
+
+    throw new Error(`${response.status} - ${response.statusText}`);
   }
 }
 
