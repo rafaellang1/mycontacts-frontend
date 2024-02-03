@@ -10,11 +10,21 @@ class HttpClient {
 
     const response = await fetch(`${this.baseURL}${path}`);
 
-    if (response.ok) {
-      return response.json(); // fazendo o parse do body
+    let body = null;
+    const contentType = response.headers.get('Content-Type');
+    if (contentType.includes('application/json')) {
+      body = await response.json(); // fazendo o parse do body
     }
 
-    throw new Error(`${response.status} - ${response.statusText}`);
+    if (response.ok) {
+      return body;
+    }
+
+    // Optional chaining
+    // verifica se o valor antes da ? é um valor null / undefined
+    throw new Error(
+      body?.error || `${response.status} - ${response.statusText}`,
+    );
   }
 }
 
