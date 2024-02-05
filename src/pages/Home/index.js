@@ -12,6 +12,7 @@ import trash from '../../assets/images/icons/trash.svg';
 import Loader from '../../components/Loader';
 
 import ContactsService from '../../services/ContactsService';
+// import APIError from '../../errors/APIError';
 
 export default function Home() {
   // Hooks
@@ -38,7 +39,10 @@ export default function Home() {
 
         setContacts(contactsList);
       } catch (error) {
-        console.log('Caiu no catch', error);
+        console.log('Name', error.name);
+        console.log('Message', error.message);
+        console.log('Response"', error.response);
+        console.log('Body:', error.body);
       } finally {
         setIsloading(false);
       }
