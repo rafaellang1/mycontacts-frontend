@@ -89,7 +89,7 @@ export default function Home() {
         />
       </InputSearchContainer>
 
-      <Header hasError={hasError}>
+      <Header $hasError={hasError}>
         {!hasError && (
           <strong>
             {filteredContacts.length}
