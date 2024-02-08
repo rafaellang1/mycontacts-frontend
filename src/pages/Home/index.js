@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState, useMemo } from 'react';
+import {
+  useEffect, useState, useMemo, useCallback,
+} from 'react';
 
 import {
   Container, InputSearchContainer, Header, ListHeader, Card, ErrorContainer,
@@ -33,11 +35,13 @@ export default function Home() {
 
   )), [contacts, searchTerm]);
 
-  async function loadContacts() {
+  const loadContacts = useCallback(async () => {
+    // utilizamos o useCallback para tratar erros de loop infinito
     try {
       setIsloading(true);
 
-      const contactsList = await ContactsService.listContacts(orderBy);
+      // const contactsList = await ContactsService.listContacts(orderBy);
+      const contactsList = []; await ContactsService.listContacts(orderBy);
 
       setHasError(false);
       setContacts(contactsList);
@@ -46,14 +50,14 @@ export default function Home() {
     } finally {
       setIsloading(false);
     }
-  }
+  }, [orderBy]);
 
   useEffect(() => {
     loadContacts();
 
     // P/ usar uma funcao async await dentro de um useEffect, nao use async direto no hook
     // criar o hook e transfere o await para nova funcao dentro do hook useEffect
-  }, [orderBy]);
+  }, [loadContacts]);
 
   // Functions
 
@@ -80,17 +84,21 @@ export default function Home() {
     <Container>
       <Loader isLoading={isLoading} />
 
-      <InputSearchContainer>
-        <input
-          value={searchTerm}
-          type="text"
-          placeholder="Pesquise pelo nome..."
-          onChange={handleChangeSearchTerm}
-        />
-      </InputSearchContainer>
+      {contacts.length > 0 && (
+        // Verifica se o retorno de contatos da API tem algum contato cadastrado
+        <InputSearchContainer>
+          <input
+            value={searchTerm}
+            type="text"
+            placeholder="Pesquise pelo nome..."
+            onChange={handleChangeSearchTerm}
+          />
+        </InputSearchContainer>
+      )}
 
       <Header $hasError={hasError}>
-        {!hasError && (
+        {(!hasError && contacts.length > 0) && (
+          // renderiza quando nao tiver erro e a lista tiver contatos cadastrados
           <strong>
             {filteredContacts.length}
             {filteredContacts.length === 1 ? ' contato' : ' contatos'}
