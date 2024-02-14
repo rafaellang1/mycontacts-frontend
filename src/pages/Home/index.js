@@ -1,16 +1,18 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import { Link } from 'react-router-dom';
 import {
   useEffect, useState, useMemo, useCallback,
 } from 'react';
 
 import {
-  Container, InputSearchContainer, Header, ListHeader, Card, ErrorContainer,
+  Container, InputSearchContainer, Header, ListHeader, Card, ErrorContainer, EmptyListContainer,
 } from './styles';
 
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
 import sad from '../../assets/images/sad.svg';
+import emptyBox from '../../assets/images/empty-box.svg';
 
 import Loader from '../../components/Loader';
 import Button from '../../components/Button';
@@ -40,8 +42,8 @@ export default function Home() {
     try {
       setIsloading(true);
 
-      // const contactsList = await ContactsService.listContacts(orderBy);
-      const contactsList = []; await ContactsService.listContacts(orderBy);
+      const contactsList = await ContactsService.listContacts(orderBy);
+      // const contactsList = []; await ContactsService.listContacts(orderBy);
 
       setHasError(false);
       setContacts(contactsList);
@@ -96,7 +98,19 @@ export default function Home() {
         </InputSearchContainer>
       )}
 
-      <Header $hasError={hasError}>
+      <Header
+        justifyContent={
+          // eslint-disable-next-line no-nested-ternary
+          hasError
+            ? 'flex-end'
+            : (
+              contacts.length > 0
+                ? 'space-between'
+                : 'center'
+            )
+
+          }
+      >
         {(!hasError && contacts.length > 0) && (
           // renderiza quando nao tiver erro e a lista tiver contatos cadastrados
           <strong>
@@ -123,6 +137,17 @@ export default function Home() {
 
       {!hasError && (
       <>
+        {(contacts.length < 1 && !isLoading) && (
+        <EmptyListContainer>
+          <img src={emptyBox} alt="Empty Box" />
+
+          <p>
+            Você ainda não tem nenhum contato cadastrado!
+            Clique no botão <strong>&quot;Novo Contato&quot;</strong> à cima
+            para cadastrar o seu primeiro contato!
+          </p>
+        </EmptyListContainer>
+        )}
 
         {filteredContacts.length > 0 && (
         <ListHeader order={orderBy}>
