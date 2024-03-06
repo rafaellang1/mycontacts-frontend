@@ -107,6 +107,7 @@ export default function Home() {
       )}
 
       <Header
+        // Error no console
         justifyContent={
           // eslint-disable-next-line no-nested-ternary
           hasError

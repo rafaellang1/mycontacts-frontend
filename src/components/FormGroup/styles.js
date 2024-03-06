@@ -20,6 +20,6 @@ export const Container = styled.div`
       top: 18px;
       right: 16px;
     }
-    }
+  }
 
 `;
