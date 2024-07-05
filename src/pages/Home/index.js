@@ -108,14 +108,12 @@ export default function Home() {
 
       <Header
         // Error no console
-        justifyContent={
+        $justifyContent={
           // eslint-disable-next-line no-nested-ternary
           hasError
             ? 'flex-end'
             : (
-              contacts.length > 0
-                ? 'space-between'
-                : 'center'
+              contacts.length > 0 ? 'space-between' : 'center'
             )
 
           }

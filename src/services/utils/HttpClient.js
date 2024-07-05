@@ -6,14 +6,18 @@ class HttpClient {
     this.baseURL = baseURL;
   }
 
-  get(path) {
-    return this.makeRequest(path, { method: 'GET' });
+  get(path, options) {
+    return this.makeRequest(path, {
+      method: 'GET',
+      headers: options?.headers,
+    });
   }
 
-  post(path, body) {
+  post(path, options) {
     return this.makeRequest(path, {
       method: 'POST',
-      body,
+      body: options?.body,
+      headers: options?.headers,
     });
   }
 
@@ -21,8 +25,15 @@ class HttpClient {
     await delay(500);
 
     const headers = new Headers();
+    // resolvendo problemas da requisição de pré-flight
     if (options.body) {
       headers.append('Content-Type', 'application/json');
+    }
+
+    if (options.headers) {
+      Object.entries(options.headers).forEach(([name, value]) => {
+        headers.append(name, value);
+      });
     }
 
     const response = await fetch(`${this.baseURL}${path}`, {
