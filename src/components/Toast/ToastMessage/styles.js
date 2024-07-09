@@ -22,9 +22,10 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 
   // importanto a variantes para type
-  ${({ variant }) => containerVariants[variant] || containerVariants.default} //usa o type definido ou dafault caso nao encontre
+  ${({ type }) => containerVariants[type] || containerVariants.default} //usa o type definido ou dafault caso nao encontre
 
   & + & {
     margin-top: 12px;
