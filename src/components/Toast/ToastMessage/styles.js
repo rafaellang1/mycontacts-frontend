@@ -24,6 +24,7 @@ export const Container = styled.div`
   justify-content: center;
   cursor: pointer;
 
+
   // importanto a variantes para type
   ${({ type }) => containerVariants[type] || containerVariants.default} //usa o type definido ou dafault caso nao encontre
 
