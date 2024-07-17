@@ -79,6 +79,12 @@ export default function ContactForm({ buttonLabel, onSubmit }) {
     await onSubmit({
       name, email, phone, categoryId,
     });
+
+    // limpar dados do form - solucao temporaria
+    setName('');
+    setEmail('');
+    setPhone('');
+    setCategoryId('');
     setIsSubmitting(false);
   }
 
