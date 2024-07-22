@@ -24,6 +24,7 @@ import magnifierQuestion from '../../assets/images/magnifier-question.svg';
 
 import Loader from '../../components/Loader';
 import Button from '../../components/Button';
+import Modal from '../../components/Modal';
 
 import ContactsService from '../../services/ContactsService';
 // import APIError from '../../errors/APIError';
@@ -93,6 +94,18 @@ export default function Home() {
   return (
     <Container>
       <Loader isLoading={isLoading} />
+
+      <Modal
+        danger
+        title='Tem certeza que deseja remover o contato "Mateus Silva?"?'
+        confirmLabel="Deletar"
+        onCancel={() => alert('Cancelou')}
+        onConfirm={() => alert('confirmou')}
+      >
+        <h2>testestes</h2>
+        <strong>tetetetetste</strong>
+        <p>osaijdoaisj</p>
+      </Modal>
 
       {contacts.length > 0 && (
         // Verifica se o retorno de contatos da API tem algum contato cadastrado
