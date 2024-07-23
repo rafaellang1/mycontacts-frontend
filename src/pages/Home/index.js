@@ -25,6 +25,7 @@ import magnifierQuestion from '../../assets/images/magnifier-question.svg';
 import Loader from '../../components/Loader';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
+import toast from '../../utils/toast';
 
 import ContactsService from '../../services/ContactsService';
 // import APIError from '../../errors/APIError';
@@ -41,6 +42,8 @@ export default function Home() {
   // set null, pois só tera contact pra deletar ao clicar na lixeira
   // este state altera o nome no Title do modal, ao clicar para cancelar
   const [contactBeingDeleted, setContactBeingDeleted] = useState(null);
+  // controlar enquanto a requisiçao esta acontecendo
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
 
   const filteredContacts = useMemo(() => contacts.filter((contact) => (
     // nome do contato, contenha o que o usuario digitou no campo de pesquisa = includes
@@ -102,10 +105,36 @@ export default function Home() {
 
   function handleCloseDeleteModal() {
     setIsDeleteModalVisible(false);
+    // setando os dados do contato ao clicar no modal, para n manter valores
+    // mesmo se for cancelado ou deletado
+    setContactBeingDeleted(null);
   }
 
-  function handleConfirmDeleteContact() {
-    console.log(contactBeingDeleted.id);
+  async function handleConfirmDeleteContact() {
+    try {
+      setIsLoadingDelete(true);
+      await ContactsService.deleteContact(contactBeingDeleted.id);
+
+      // limpando o contato após ser deletado
+      setContacts((prevState) => prevState.filter(
+        (contact) => contact.id !== contactBeingDeleted.id,
+      ));
+
+      // exec func para fechar modal após o delete
+      handleCloseDeleteModal();
+
+      toast({
+        type: 'success',
+        text: 'Contacto deletado com sucesso',
+      });
+    } catch {
+      toast({
+        type: 'danger',
+        text: 'Ocorreu um erro ao deletar o contato!',
+      });
+    } finally {
+      setIsLoadingDelete(false);
+    }
   }
 
   return (
@@ -114,6 +143,8 @@ export default function Home() {
 
       <Modal
         danger
+        // is Loading delete somente enquanto a req esta acontecendo
+        isLoading={isLoadingDelete}
         visible={isDeleteModalVisible}
         title={`Tem certeza que deseja remover o contato "${contactBeingDeleted?.name}"?`}
         confirmLabel="Deletar"
