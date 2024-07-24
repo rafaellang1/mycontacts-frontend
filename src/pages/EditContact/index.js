@@ -1,7 +1,7 @@
 import { useParams, useHistory } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 
-import ContactForm from '../../components/ContacForm';
+import ContactForm from '../../components/ContactForm';
 import PageHeader from '../../components/PageHeader';
 import ContactsService from '../../services/ContactsService';
 import Loader from '../../components/Loader';
