@@ -25,14 +25,15 @@ export default function EditContact() {
           id,
         );
 
+        // comp só renderiza se o state estiver montado
         safeAsyncAction(() => {
           contactFormRef.current.setFieldsValues(contact);
           setIsLoading(false);
           setContactName(contact.name);
         });
       } catch {
-        // caso nao encontrar contato, redirect para home com history push
         safeAsyncAction(() => {
+          // caso nao encontrar contato, redirect para home com history push
           history.push('/');
           toast({
             type: 'danger',
