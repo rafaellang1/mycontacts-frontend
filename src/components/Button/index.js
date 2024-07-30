@@ -17,7 +17,8 @@ export default function Button({
       type={type}
       //  desabilita o button se disabled ou isLoading for igual a true
       disabled={disabled || isLoading}
-      danger={danger}
+      // transient props $ - evita que o comp seja passada diretamente ao DOM
+      $danger={danger}
       onClick={onClick}
     >
 

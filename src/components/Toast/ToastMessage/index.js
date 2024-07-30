@@ -46,8 +46,8 @@ ToastMessage.propTypes = {
     id: PropTypes.number.isRequired,
     text: PropTypes.string.isRequired,
     // oneOf: define quais valores poderão ser acessados via props
-    type: PropTypes.oneOf(['default', 'success', 'danger']),
     duration: PropTypes.number,
+    type: PropTypes.oneOf(['default', 'success', 'danger']),
   }).isRequired,
 
   onRemoveMessage: PropTypes.func.isRequired,
